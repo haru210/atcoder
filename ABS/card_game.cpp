@@ -35,3 +35,5 @@ int main()
     cout << alice - bob << endl;
     return 0;
 }
+
+//コーナーケースの処理を怠らない!
