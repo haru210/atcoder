@@ -16,26 +16,21 @@ int main()
     cin >> n;
     //サイズ10^9が10^9来てもllに収まる
     map<ll,ll> cnt;
-    pint sc[n];
-    rep(i,n)
-    {
-        cin >> sc[i].first >> sc[i].second;
-    }
-    sort(sc,sc+n);
-    rep(i,n)
-    {
-        cnt[sc[i].first] = sc[i].second;
-    }
     ll ans = 0;
+    ll x,y;
+    rep(i,n)
+    {
+        cin >> x >> y;
+        cnt[x] = y;
+    }
     for(auto& [key,val]: cnt)
     {
         if(cnt[key] >= 2)
         {
-            cnt[key*2] = cnt[key] / 2;
-            ll tmp = cnt[key] %2;
-            cnt[key] = tmp; 
+            cnt[key*2] += val / 2;
+            cnt[key] %= 2; 
         }
-        ans += cnt[key];
+        ans += val;
     }
     cout << ans << "\n";
     return 0;
