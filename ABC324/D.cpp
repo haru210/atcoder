@@ -41,14 +41,13 @@ int main()
         max_s += tmp;
         e *= 10;
     }
-    if(s == "0") ans++;
-    for(ll i = 1; i * i <= max_s; i++)
+    for(ll i = 0; i * i <= max_s; i++)
     {
         ll sq = i*i;
         ll digit = GetDigit(sq);
         string sq_string = "";
         rep(j,n - digit) sq_string += "0";
-        sq_string += to_string(sq);
+        if(sq != 0)sq_string += to_string(sq);
         ll sq_cnt[10] = {0};
         rep(j,sq_string.size())
         {
