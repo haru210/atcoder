@@ -11,79 +11,37 @@ using pll = pair<long long, long long>;
 
 const int inf = 2147483647;
 const long long l_inf = 9223372036854775807;
-
-int h,w;
-
-void swap_s(int a1[5][5], int s_line)
-{
-    int tmp[5][5] = {};
-    rep(i,h)
-    {
-        rep(j,w)
-        {
-            if(j == s_line)
-            {
-                tmp[i][j] = a1[i][j+1];
-            }
-            else if(j == s_line + 1)
-            {
-                tmp[i][j] = a1[i][j-1];
-            }
-            else
-            {
-                tmp[i][j] = a1[i][j];
-            }
-        }
-    }
-    rep(i,h) rep(j,w) a1[i][j] = tmp[i][j];
-}
 int main()
 {
-    //同じ操作をすると順番にかかわらずもとに戻るので、
-    //bit全探索で全操作する
+    int h,w;
     int ans = inf;
     cin >> h >> w;
-    int a[5][5];
-    int b[5][5];
-    int copy[5][5];
+    int a[h][w];
+    int b[h][w];
+    vector<int> row;
+    vector<int> line;
     rep(i,h) rep(j,w) cin >> a[i][j];
     rep(i,h) rep(j,w) cin >> b[i][j];
-    //下w-1ビット列スワップ 上h-1ビット行スワップ
-    for(int i = 0; i < (1 << (h + w - 1)); i++)
+    rep(i,h) row.push_back(i);
+    rep(i,w) line.push_back(i);
+    do
     {
-        rep(j,h) rep(k,w) copy[j][k] = a[j][k];
-        rep(j,w-1)
+        do
         {
-            int tmp1 = (1 << j);
-            if((i / tmp1) % 2 == 1)
+            int copy[h][w] = {};
+            rep(i,h) rep(j,w) copy[i][j] = a[row[i]][line[j]];
+            bool ok = true;
+            rep(i,h) rep(j,w) if(copy[i][j] != b[i][j]) ok = false;
+            int tmp = inf;
+            if(ok)
             {
-                swap_s(copy, j);
+                tmp = 0;
+                for(int i = 0; i < h; i++) for(int j = i - 1; j >= 0; j--) if(row[i] < row[j]) tmp++;
+                for(int i = 0; i < w; i++) for(int j = i - 1; j >= 0; j--) if(line[i] < line[j]) tmp++;
             }
-        }
-        for(int j = 0; j < h - 1; j++)
-        {
-            int tmp1 = (1 << (j + (w-1)));
-            if((i/ tmp1) % 2 == 1)
-            {
-                swap(copy[j], copy[j+1]);
-            }
-        }
-        bool ok = true;
-        rep(j,h) rep(k,w)
-        {
-            if(copy[j][k] != b[j][k]) ok = false;
-        }
-        if(ok)
-        {
-            int tmp = 0;
-            rep(j,(h+w-2))
-            {
-                int tmp1 = 1 << j;
-                if((i / tmp1) % 2 == 1) tmp++;
-            }
-            ans = min(tmp, ans);
-        }
-    }
+            ans = min(ans, tmp);
+        }while(next_permutation(line.begin(), line.end()));
+    }while(next_permutation(row.begin(), row.end()));
     if(ans == inf) cout << -1 << endl;
     else cout << ans << endl;
     return 0;
