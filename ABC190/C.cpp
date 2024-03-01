@@ -40,6 +40,8 @@ int main()
                 dishes[d[j] - 1]++;
             }
         }
+
+        //条件を満たす数を数える
         for(int j = 0; j < m; j++)
         {
             if(dishes[a[j] - 1] > 0 && dishes[b[j] - 1] > 0) tmp++;
