@@ -42,6 +42,7 @@ int main()
         ans_list.push_back({p - exp_2[cnt], p});
         p -= exp_2[cnt];
     }
+    
     reverse(ans_list.begin(), ans_list.end());
     cout << ans << endl;
     rep(i,ans_list.size())
