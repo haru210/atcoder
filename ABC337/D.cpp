@@ -12,111 +12,54 @@ using pll = pair<long long, long long>;
 const int inf = 2147483647;
 const long long l_inf = 9223372036854775807;
 
-//各マス1回は見れる
-//
 int main()
 {
-    int h,w,k;
-    int ans = inf;
+    int h, w, k;
     cin >> h >> w >> k;
     string s[h];
-    int yoko_s[h][w] = {};
-    int tate_s[w][h] = {};
-    rep(i,h) cin >> s[i];
-    //1からnマスのoの数を累積和することで埋められるかだけ確認すればよい
-    rep(i,h)
+    rep(i, h) cin >> s[i];
+    ll orow[h+1][w+1] = {};
+    ll ocolumn[w+1][h+1] = {};
+    rep2(i, h)
     {
-        rep(j,w)
+        rep2(j, w)
         {
-            int tmp = 0;
-            if(s[i][j] == 'o') tmp = 1;
-            if(j == 0) yoko_s[i][j] = tmp;
-            else yoko_s[i][j] = yoko_s[i][j-1] + tmp; 
-        }
-    }
-    rep(j,w)
-    {
-        rep(i,h)
-        {
-            int tmp = 0;
-            if(s[i][j] == 'o') tmp = 1;
-            if(i == 0) tate_s[j][i] = tmp;
-            else tate_s[j][i] = tate_s[j][i-1] + tmp;
-        }
-    }
-    //横
-    int yoko[h][w] = {};
-    rep(i,h)
-    {
-        int start = 0;
-        rep(j,w)
-        {
-            if(j < k)
+            orow[i][j] = orow[i][j-1];
+            ocolumn[j][i] = ocolumn[j][i-1];
+            if(s[i-1][j-1] == 'o')
             {
-                if(s[i][j] == 'x') start = j + 1;
+                orow[i][j]++;
+                ocolumn[j][i]++;
             }
-            if(j == (k - 1))
+            if(s[i-1][j-1] == 'x')
             {
-                yoko[i][j] = (j + 1) - start;
-            }
-            if(j >= k)
-            {
-                if(s[i][j] != 'x')
-                {
-                    yoko[i][j] = yoko[i][j-1] + 1;
-                } 
-                else
-                {
-                    yoko[i][j] = 0;
-                }
-            }
-            if(yoko[i][j] >= k)
-            {
-                //(i,j - (k-1))から(i,j)をチェック
-                int tmp;
-                if(j - k < 0) tmp = k - yoko_s[i][j];
-                tmp = k - (yoko_s[i][j] - yoko_s[i][j - k]);
-                ans = min(ans,tmp);
+                orow[i][j]-= 1000000;
+                ocolumn[j][i] -= 1000000;
             }
         }
     }
-    //縦
-    int tate[w][h] = {};
-    rep(j,w)
+    ll ans = l_inf;
+    rep2(i, h)
     {
-        int start = 0;
-        rep(i,h)
+        rep2(j, (w- k + 1))
         {
-            if(i < k)
-            {
-                if(s[i][j] == 'x') start = i + 1;
-            }
-            if(i == (k - 1))
-            {
-                tate[j][i] = (i + 1) - start;
-            }
-            if(i >= k)
-            {
-                if(s[i][j] != 'x')
-                {
-                    tate[j][i] = tate[j][i-1] + 1;
-                } 
-                else
-                {
-                    tate[j][i] = 0;
-                }
-            }
-            if(tate[j][i] >= k)
-            {
-                int tmp;
-                if(i - k < 0) tmp = k - tate[j][i];
-                tmp = k - (tate_s[j][i] - tate_s[j][i - k]);
-                ans = min(ans,tmp);
-            }
-
+            ll tmp = orow[i][j + k - 1] - orow[i][j - 1];
+            if(tmp < 0) continue;
+            tmp = k - tmp;
+            ans = min(tmp, ans);
         }
     }
-    if(ans == inf) cout << -1 << endl;
+    rep2(j, w)
+    {
+        rep2(i, (h - k + 1))
+        {
+            ll tmp = ocolumn[j][i + k - 1] - ocolumn[j][i-1];
+            if(tmp < 0) continue;
+            tmp = k - tmp;
+            ans = min(tmp, ans);
+        }
+    }
+    if(ans == l_inf) cout << -1 << endl;
     else cout << ans << endl;
     return 0;
 }
