@@ -12,7 +12,7 @@ using pll = pair<long long, long long>;
 const int inf = 2147483647;
 const long long l_inf = 9223372036854775807;
 
-long long  pow(ll a, ll e)
+ll power(ll a, ll e)
 {
     if(e == 0) return 1;
     ll ans = 1;
@@ -53,7 +53,7 @@ int main()
     n -= sum[dig - 1];
     n--;
     string ans = "";
-    ll num = n + pow(10, (dicdig - 1));
+    ll num = n + power(10, (dicdig - 1));
     ans += to_string(num);
     string tmp = ans;
     string t = ans;
