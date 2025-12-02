@@ -60,6 +60,7 @@ int main()
                 ok = false;
                 break;
             }
+            ypos[y[i]] = i;
         }
         if(!ok)
         {
@@ -74,34 +75,64 @@ int main()
         {
             rep(j, m)
             {
-                minxy[min(x[i], y[j])].push({y[i], x[i]}); 
+                minxy[min(x[i], y[j])].push({i, j}); 
             }
         }
-        for(int i = n * m - 1; i >= 0; i++)
+        for(int i = n * m - 1; i >= 0; i--)
         {
             if(xpos[i] != -1 && ypos[i] != -1)
             {
-                ans[ypos[i]][xpos[i]] = i + 1;
+                ans[xpos[i]][ypos[i]] = i + 1;
                 while(!minxy[i].empty())
                 {
                     pint tmp = minxy[i].front();
                     minxy[i].pop();
+                    if(tmp.first == xpos[i] && tmp.second == ypos[i]) continue;
                     okxy.push(tmp);
                 }
-                continue;
             }
-            if(xpos[i] != -1 || ypos[i] != -1)
+            else if(xpos[i] != -1 || ypos[i] != -1)
             {
+                if(minxy[i].empty())
+                {
+                    ok = false;
+                    break;
+                }
                 pint anspos = minxy[i].front();
                 minxy[i].pop();
-                ans[anspos.first][anspos.second] = i + i;
+                ans[anspos.first][anspos.second] = i + 1;
                 while(!minxy[i].empty())
                 {
                     pint tmp = minxy[i].front();
                     minxy[i].pop();
                     okxy.push(tmp);
                 }
-                continue;
+            }
+            else if(xpos[i] == -1 && ypos[i] == -1)
+            {
+                if(okxy.empty())
+                {
+                    ok = false;
+                    break;
+                }
+                pint anspos = okxy.front();
+                okxy.pop();
+                ans[anspos.first][anspos.second] = i + 1;
+            }
+        }
+        if(!ok)
+        {
+            cout << "No\n";
+            continue;
+        }
+        cout << "Yes\n";
+        rep(i, n)
+        {
+            rep(j, m)
+            {
+                cout << ans[i][j];
+                if(j != m - 1) cout << ' ';
+                else cout << endl;
             }
         }
     }
